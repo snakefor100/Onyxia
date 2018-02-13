@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * GC监控handler
+ * 对NotificationEmitter添加一个GC监听器，当GC结束时，执行监听器的handleNotification方法
  * @author niuniu
  * @version 1.0.0
  * @since 1.0.0

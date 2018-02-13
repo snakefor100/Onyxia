@@ -10,6 +10,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 
 /**
+ * 线程监控Handler
  * @author niuniu
  * @version 1.0.0
  * @since 1.0.0

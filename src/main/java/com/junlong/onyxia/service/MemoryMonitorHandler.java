@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 内存监控Handler
  * @author niuniu
  * @version 1.0.0
  * @since 1.0.0
