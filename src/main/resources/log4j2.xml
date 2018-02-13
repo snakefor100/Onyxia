@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug">
+	<Properties>
+		<Property name="log-path">F:\logs
+		</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+		</Console>
+		<!-- gc监控日志 -->
+		<RollingRandomAccessFile name="gc-appender"
+								 fileName="${log-path}/onyxia-gc-biz.log"
+								 immediateFlush="true"
+								 filePattern="${log-path}/onyxia-gc-biz.%d{yyyyMMdd}">
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+										   modulate="true" />
+			</Policies>
+		</RollingRandomAccessFile>
+
+		<!-- 线程监控日志 -->
+		<RollingRandomAccessFile name="thread-appender"
+								 fileName="${log-path}/onyxia-thread-biz.log"
+								 immediateFlush="true"
+								 filePattern="${log-path}/onyxia-thread-biz.log.%d{yyyyMMdd}">
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+										   modulate="true" />
+			</Policies>
+		</RollingRandomAccessFile>
+		<!-- 内存监控日志 -->
+		<RollingRandomAccessFile name="memory-appender"
+								 fileName="${log-path}/onyxia-memory-biz.log"
+								 immediateFlush="true"
+								 filePattern="${log-path}/onyxia-memory-biz.log.%d{yyyyMMdd}">
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+										   modulate="true" />
+			</Policies>
+		</RollingRandomAccessFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="onyxia-gc-logger" includeLocation="true" additivity="false">
+			<AppenderRef ref="gc-appender" />
+		</Logger>
+		<Logger name="onyxia-memory-logger" includeLocation="true" additivity="false">
+			<AppenderRef ref="memory-appender" />
+		</Logger>
+		<Logger name="onyxia-thread-logger" includeLocation="true" additivity="false">
+			<AppenderRef ref="thread-appender" />
+		</Logger>
+		<Root level="INFO" includeLocation="true">
+			<AppenderRef ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
