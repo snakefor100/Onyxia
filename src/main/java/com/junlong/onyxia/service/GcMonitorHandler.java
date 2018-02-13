@@ -19,18 +19,17 @@ import javax.management.openmbean.CompositeData;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author niuniu
  * @version 1.0.0
- * @date 2018/2/10
  * @since 1.0.0
  */
 public class GcMonitorHandler extends DefaultMonitorHandler<GcInfoEntity> {
     private static final Logger logger = LoggerFactory.getLogger(OnyxiaConstants.LOGGER_GC_NAME);
+    private static final long startRuntimeTime = ManagementFactory.getRuntimeMXBean().getStartTime();
 
     @Override
     GcInfoEntity doMonitor() {
@@ -43,7 +42,6 @@ public class GcMonitorHandler extends DefaultMonitorHandler<GcInfoEntity> {
         if (CollectionUtils.isEmpty(garbageCollectorMXBeanList)) {
             return;
         }
-
         for (GarbageCollectorMXBean gcBean : garbageCollectorMXBeanList) {
             NotificationEmitter emitter = (NotificationEmitter) gcBean;
             //每个内存区域，new一个监听器
@@ -53,14 +51,16 @@ public class GcMonitorHandler extends DefaultMonitorHandler<GcInfoEntity> {
                     GcInfoEntity gcInfoEntity = new GcInfoEntity();
                     GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
                     GcInfo gcInfo = info.getGcInfo();
+
                     Map<String, MemoryUsage> memoryUsageBeforeGc = gcInfo.getMemoryUsageBeforeGc();
                     Map<String, MemoryUsage> memoryUsageAfterGc = gcInfo.getMemoryUsageAfterGc();
 
                     gcInfoEntity.setGcCause(info.getGcCause());
                     gcInfoEntity.setName(info.getGcAction());
                     gcInfoEntity.setCount(info.getGcInfo().getId());
-                    gcInfoEntity.setStartTime(new DateTime(gcInfo.getStartTime()).toString(OnyxiaConstants.DATE_FORMAT_Y_M_D_H_M_S_S));
-                    gcInfoEntity.setEndTime(new DateTime(gcInfo.getEndTime()).toString(OnyxiaConstants.DATE_FORMAT_Y_M_D_H_M_S_S));
+
+                    gcInfoEntity.setStartTime(new DateTime(startRuntimeTime + gcInfo.getStartTime()).toString(OnyxiaConstants.DATE_FORMAT_Y_M_D_H_M_S_S));
+                    gcInfoEntity.setEndTime(new DateTime(startRuntimeTime + gcInfo.getEndTime()).toString(OnyxiaConstants.DATE_FORMAT_Y_M_D_H_M_S_S));
                     if (!CollectionUtils.isEmpty(memoryUsageAfterGc)) {
                         for (Map.Entry<String, MemoryUsage> entry : memoryUsageAfterGc.entrySet()) {
                             String name = entry.getKey();

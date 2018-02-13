@@ -9,7 +9,6 @@ import java.lang.annotation.*;
  * 启用onyxia监控注解
  * @author niuniu
  * @version 1.0.0
- * @date 2018/2/9
  * @since 1.0.0
  */
 @Target(ElementType.TYPE)

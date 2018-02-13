@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
  * 自动装配，若配置监控属性，则自动开启监控
  * @author niuniu
  * @version 1.0.0
- * @date 2018/2/9
  * @since 1.0.0
  */
 @Configuration
