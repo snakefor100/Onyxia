@@ -37,9 +37,8 @@ onyxia:
 - [GC](#GC)  提供对GC的监控.
 - [MEMORY](#MEMORY)  提供对内存的监控
 
-# 查看监控结果
 
-## [THREAD](/src/main/java/com/junlong/onyxia/service/ThreadMonitorHandler)
+##   <span id="THREAD">THREAD</span>
 ### 获取监控结果
  1. 日志
     配置一个名为"onyxia-thread-logger"的logger，监控结果会保存在相应的日志中。
@@ -107,7 +106,7 @@ public class ThreadCallback implements ThreadResultCallback {
 
 
 
-## [GC]
+## <span id="GC">GC</span>
 ### 获取监控结果
-## [MEMORY]
+## <span id="MEMORY">MEMORY</span>
 ### 获取监控结果
