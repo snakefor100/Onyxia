@@ -60,7 +60,7 @@ public class GcMonitorHandler extends DefaultMonitorHandler<GcInfoEntity> {
                     gcInfoEntity.setGcCause(info.getGcCause());
                     gcInfoEntity.setName(info.getGcAction());
                     gcInfoEntity.setCount(info.getGcInfo().getId());
-
+                    gcInfoEntity.setGCTime(info.getGcInfo().getDuration());
                     gcInfoEntity.setStartTime(new DateTime(startRuntimeTime + gcInfo.getStartTime()).toString(OnyxiaConstants.DATE_FORMAT_Y_M_D_H_M_S_S));
                     gcInfoEntity.setEndTime(new DateTime(startRuntimeTime + gcInfo.getEndTime()).toString(OnyxiaConstants.DATE_FORMAT_Y_M_D_H_M_S_S));
                     if (!CollectionUtils.isEmpty(memoryUsageAfterGc)) {

@@ -38,7 +38,7 @@ onyxia:
 - [内存监控](#MEMORY)  提供对内存的监控
 
 
-##   <span id="THREAD">THREAD</span>
+##   <h2 id="THREAD">THREAD</h2>
 ### 获取监控结果
  1. 日志
     配置一个名为"onyxia-thread-logger"的logger，监控结果会保存在相应的日志中。
@@ -108,5 +108,88 @@ public class ThreadCallback implements ThreadResultCallback {
 
 ## <h2 id="GC">GC</h2>
 ### 获取监控结果
+1. 日志
+    配置一个名为"onyxia-gc-logger"的logger，监控结果会保存在相应的日志中。
+    以log4j2为例，配置如下：
+    
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug">
+	<Properties>
+		<Property name="log-path">F:\logs
+		</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+		</Console>
+		<!-- 线程监控日志 -->
+		<RollingRandomAccessFile name="gc-appender"
+								 fileName="${log-path}/onyxia-gc-biz.log"
+								 immediateFlush="true"
+								 filePattern="${log-path}/onyxia-gc-biz.log.%d{yyyyMMdd}">
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+										   modulate="true" />
+			</Policies>
+		</RollingRandomAccessFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="onyxia-gc-logger" includeLocation="true" additivity="false">
+			<AppenderRef ref="gc-appender" />
+		</Logger>
+		<Root level="INFO" includeLocation="true">
+			<AppenderRef ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
+```
+日志文件示例：
+
+```log
+[2018-02-23 00:10:41,606][Service Thread][INFO][onyxia-gc-logger:88] GcInfoEntity{name='end of minor GC', count=18, gcCause='Allocation Failure', startTime='2018-02-23 00:10:41.466', endTime='2018-02-23 00:10:41.473', beforeMemory=MemoryCommonEntity{committed=50196480, init=0, max=-1, used=48762712}, afterMemory=MemoryCommonEntity{committed=50196480, init=0, max=-1, used=48762712}, GCTime=0}
+```
+
+ 2. 回调方法获取  
+    实现GcResultCallback接口，并在当前类加@OnyxiaCallback注解，monitorMenu属性填写MonitorMenuEnum.GC,重写doCallback方法，参数GcInfoEntity是监控结果。例如：
+```
+@OnyxiaCallback(monitorMenu = MonitorMenuEnum.GC)
+public class GCCallback implements GcResultCallback {
+    @Override
+    public void doCallback(GcInfoEntity monitorResult) {
+ //拿到监控结果后，根据自己的业务逻辑，实现相关逻辑
+        System.out.println(monitorResult);
+    }
+}
+
+```
+3. GC监控结果属性  
+  
+GcInfoEntity对象  
+
+| 属性名        | 类型           | 含义  |
+| ------------- |:-------------:| -----:|
+| name      | string | 标识是哪个gc动作，一般为：end of major GC，Young Gen GC等，分别表示老年代和新生代的gc结束 |
+| count      | long      |  	标识这个收集器进行了几次gc |
+| gcCause | String      |   引起gc的原因,如：System.gc()，Allocation Failure，G1 Humongous Allocation等 |
+| startTime | String      |    gc的开始时间 |
+| endTime | String      |    gc的结束时间 |
+| beforeMemory | MemoryCommonEntity      |    gc前内存情况 |
+| afterMemory | MemoryCommonEntity      |    gc后内存情况 |
+| GCTime | long      |    GC耗时，单位：毫秒 |
+   
+   
+MemoryCommonEntity对象  
+详见：[MemoryUsage](https://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryUsage.html#MemoryUsage(long,%20long,%20long,%20long))
+
+
+| 属性名        | 类型           | 含义  |
+| ------------- |:-------------:| -----:|
+| committed      | long | 已申请内存 |
+| init      | long      |  	初始化内存 |
+| max | long      |   最大内存，收集器有可能不会记录，若不记录，则为-1 |
+| used | long      |    已使用内存 |
+
+
+
 ## <h2 id="MEMORY">MEMORY</h2>
 ### 获取监控结果
