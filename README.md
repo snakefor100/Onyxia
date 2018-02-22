@@ -6,6 +6,16 @@
 - `2： 被动获取监控结果 - GC`
     每当GC动作结束时，获取当前GC的监控信息
 
+获取监控结果的方式也有两种
+- `1： 查看监控日志`
+    需要根据自己的日志组件，配置固定名称的logger，详见各监控说明。
+    - 线程监控（需配置logger名为：onyxia-thread-logger），监控日志举例：（/example/onyxia-thread-biz.log)
+    - 内存监控（需配置logger名为：onyxia-memory-logger），监控日志举例：（/example/onyxia-memory-biz.log)
+    - GC监控（需配置logger名为：onyxia-gc-logger），监控日志举例：（/example/onyxia-gc-biz.log)
+    
+- `2： 被动获取监控结果 - GC`
+    每当GC动作结束时，获取当前GC的监控信息
+
 要求： jdk版本： 1.7以上，spring boot项目
 
 # 接入方式
