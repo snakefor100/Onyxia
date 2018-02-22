@@ -4,17 +4,19 @@
     每隔固定时间（配置文件的delay值），获取当前服务中的Thread，Memory监控信息
     
 - `2： 被动获取监控结果 - GC`
-    每当GC动作结束时，获取当前GC的监控信息
+    每当GC动作结束时，获取当前GC的监控信息,因为被动获取，所以监控配置delay属性不会生效。
 
-获取监控结果的方式也有两种
-- `1： 查看监控日志`
+获取监控结果的方式有两种
+- `1： 查看监控日志(需配置日志组件的logger）`
     需要根据自己的日志组件，配置固定名称的logger，详见各监控说明。
-    - 线程监控（需配置logger名为：onyxia-thread-logger），监控日志举例：（/example/onyxia-thread-biz.log)
-    - 内存监控（需配置logger名为：onyxia-memory-logger），监控日志举例：（/example/onyxia-memory-biz.log)
-    - GC监控（需配置logger名为：onyxia-gc-logger），监控日志举例：（/example/onyxia-gc-biz.log)
+    - 线程监控（需配置logger名为：onyxia-thread-logger），监控日志举例：（/Onyxia/example/onyxia-thread-biz.log)
+    - 内存监控（需配置logger名为：onyxia-memory-logger），监控日志举例：（/Onyxia/example/onyxia-memory-biz.log)
+    - GC监控（需配置logger名为：onyxia-gc-logger），监控日志举例：（/Onyxia/example/onyxia-gc-biz.log)
     
-- `2： 被动获取监控结果 - GC`
-    每当GC动作结束时，获取当前GC的监控信息
+- `2： 实现接口，通过回调方法，从参数中拿取监控结果`
+    - 线程监控，实现ThreadResultCallback接口，实现类增加@OnyxiaCallback注解，并指定monitorMenu属性为MonitorMenuEnum.THREAD
+    - 内存监控，实现MemoryResultCallback接口，实现类增加@OnyxiaCallback注解，并指定monitorMenu属性为MonitorMenuEnum.MEMORY
+    - GC监控，实现GcResultCallback接口，实现类增加@OnyxiaCallback注解，并指定monitorMenu属性为MonitorMenuEnum.GC
 
 要求： jdk版本： 1.7以上，spring boot项目
 
