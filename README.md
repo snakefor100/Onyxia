@@ -106,7 +106,7 @@ public class ThreadCallback implements ThreadResultCallback {
 
 
 
-## <span id="GC">GC</span>
+## <h2 id="GC">GC</h2>
 ### 获取监控结果
-## <span id="MEMORY">MEMORY</span>
+## <h2 id="MEMORY">MEMORY</h2>
 ### 获取监控结果
