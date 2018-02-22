@@ -42,9 +42,71 @@ onyxia:
 ## [THREAD]
 ### 获取监控结果
  1. 日志
-    配置
+    配置一个名为"onyxia-thread-logger"的logger，监控结果会保存在相应的日志中。
+    以log4j2为例，配置如下：
+    
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug">
+	<Properties>
+		<Property name="log-path">F:\logs
+		</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+		</Console>
+		<!-- 线程监控日志 -->
+		<RollingRandomAccessFile name="thread-appender"
+								 fileName="${log-path}/onyxia-thread-biz.log"
+								 immediateFlush="true"
+								 filePattern="${log-path}/onyxia-thread-biz.log.%d{yyyyMMdd}">
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+										   modulate="true" />
+			</Policies>
+		</RollingRandomAccessFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="onyxia-thread-logger" includeLocation="true" additivity="false">
+			<AppenderRef ref="thread-appender" />
+		</Logger>
+		<Root level="INFO" includeLocation="true">
+			<AppenderRef ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
+```
+日志文件示例：
+
+```log
+[2018-02-23 00:09:52,448][onyxia-THREAD-1][INFO][onyxia-thread-logger:34] ThreadInfoEntity{activityCount=18, peakCount=18, totalStartedThreadCount=20, daemonCount=16}
+[2018-02-23 00:09:53,483][onyxia-THREAD-1][INFO][onyxia-thread-logger:34] ThreadInfoEntity{activityCount=19, peakCount=19, totalStartedThreadCount=22, daemonCount=17}
+```
+
  2. 回调方法获取  
-    fas
+    实现ThreadResultCallback接口，并在当前类加@OnyxiaCallback注解，monitorMenu属性填写MonitorMenuEnum.THREAD,重写doCallback方法，参数ThreadInfoEntity是监控结果。例如：
+```
+@OnyxiaCallback(monitorMenu = MonitorMenuEnum.THREAD)
+public class ThreadCallback implements ThreadResultCallback {
+    @Override
+    public void doCallback(ThreadInfoEntity monitorResult) {
+        //拿到监控结果后，根据自己的业务逻辑，实现相关逻辑
+        System.out.println(monitorResult);
+    }
+}
+
+```
+3. 监控结果ThreadInfoEntity对象属性
+
+| 属性名        | 类型           | 含义  |
+| ------------- |:-------------:| -----:|
+| activityCount      | int | 当前活动线程数 |
+| peakCount      | int      |  峰值线程数 |
+| totalStartedThreadCount | long      |   线程总数 |
+| daemonCount | int      |    守护线程数 |
+
+
+
 ## [GC]
 ### 获取监控结果
 ## [MEMORY]

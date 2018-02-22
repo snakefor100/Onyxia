@@ -40,14 +40,11 @@ public class MonitorRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         logger.info("Spring boot 容器初始化完成");
         initCallback();
-        List<MonitorMenuConfig> monitorMenuList = monitorConfig.getMonitorMenu();
+        List<MonitorMenuConfig> monitorMenuList = monitorConfig.getMonitorMenuList();
         if (CollectionUtils.isEmpty(monitorMenuList) || !monitorConfig.isMainSwitch()) {
             return;
         }
         for (MonitorMenuConfig monitorMenuConfig : monitorMenuList) {
-            if(!monitorMenuConfig.isMenuSwitch()){
-                continue;
-            }
             switch (monitorMenuConfig.getMonitorMenu()) {
                 case THREAD:
                     new ThreadMonitorHandler().monitorTaskStart(getCallbackByMonitorMenu(MonitorMenuEnum.THREAD), monitorMenuConfig);
