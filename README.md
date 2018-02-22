@@ -165,6 +165,8 @@ public class GCCallback implements GcResultCallback {
 3. GC监控结果属性  
   
 GcInfoEntity对象  
+参考：[GarbageCollectionNotificationInfo](https://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/GarbageCollectionNotificationInfo.html)
+参考：[GcInfo](https://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/GcInfo.html)
 
 | 属性名        | 类型           | 含义  |
 | ------------- |:-------------:| -----:|
@@ -179,7 +181,7 @@ GcInfoEntity对象
    
    
 MemoryCommonEntity对象  
-详见：[MemoryUsage](https://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryUsage.html#MemoryUsage(long,%20long,%20long,%20long))
+参考：[MemoryUsage](https://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryUsage.html)
 
 
 | 属性名        | 类型           | 含义  |
@@ -193,3 +195,91 @@ MemoryCommonEntity对象
 
 ## <h2 id="MEMORY">MEMORY</h2>
 ### 获取监控结果
+1. 日志
+    配置一个名为"onyxia-memory-logger"的logger，监控结果会保存在相应的日志中。
+    以log4j2为例，配置如下：
+    
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug">
+	<Properties>
+		<Property name="log-path">F:\logs
+		</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+		</Console>
+		<!-- 线程监控日志 -->
+		<RollingRandomAccessFile name="memory-appender"
+								 fileName="${log-path}/onyxia-memory-biz.log"
+								 immediateFlush="true"
+								 filePattern="${log-path}/onyxia-memory-biz.log.%d{yyyyMMdd}">
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+										   modulate="true" />
+			</Policies>
+		</RollingRandomAccessFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="onyxia-memory-logger" includeLocation="true" additivity="false">
+			<AppenderRef ref="memory-appender" />
+		</Logger>
+		<Root level="INFO" includeLocation="true">
+			<AppenderRef ref="console" />
+		</Root>
+	</Loggers>
+</Configuration>
+```
+日志文件示例：
+
+```log
+MemoryInfoEntity{headMomory=MemoryCommonEntity{committed=116391936, init=134217728, max=116391936, used=60901928}, noHeadMomory=MemoryCommonEntity{committed=76804096, init=2555904, max=-1, used=73968608}, memoryPoolInfoEntityList=[MemoryPoolInfoEntity{peakMemroy=MemoryCommonEntity{committed=20447232, init=2555904, max=251658240, used=20372352}, currentMemory=MemoryCommonEntity{committed=20447232, init=2555904, max=251658240, used=19354368}, name='Code Cache', managerName='[CodeCacheManager]', objectName='java.lang:type=MemoryPool,name=Code Cache'}, MemoryPoolInfoEntity{peakMemroy=MemoryCommonEntity{committed=49934336, init=0, max=-1, used=48671120}, currentMemory=MemoryCommonEntity{committed=49934336, init=0, max=-1, used=48671120}, name='Metaspace', managerName='[Metaspace Manager]', objectName='java.lang:type=MemoryPool,name=Metaspace'}, MemoryPoolInfoEntity{peakMemroy=MemoryCommonEntity{committed=6422528, init=0, max=1073741824, used=5972976}, currentMemory=MemoryCommonEntity{committed=6422528, init=0, max=1073741824, used=5972976}, name='Compressed Class Space', managerName='[Metaspace Manager]', objectName='java.lang:type=MemoryPool,name=Compressed Class Space'}, MemoryPoolInfoEntity{peakMemroy=MemoryCommonEntity{committed=50331648, init=50331648, max=50331648, used=50331648}, currentMemory=MemoryCommonEntity{committed=34603008, init=50331648, max=34603008, used=26128472}, name='PS Eden Space', managerName='[PS MarkSweep, PS Scavenge]', objectName='java.lang:type=MemoryPool,name=PS Eden Space'}, MemoryPoolInfoEntity{peakMemroy=MemoryCommonEntity{committed=14680064, init=8388608, max=14680064, used=14223680}, currentMemory=MemoryCommonEntity{committed=14680064, init=8388608, max=14680064, used=14223680}, name='PS Survivor Space', managerName='[PS MarkSweep, PS Scavenge]', objectName='java.lang:type=MemoryPool,name=PS Survivor Space'}, MemoryPoolInfoEntity{peakMemroy=MemoryCommonEntity{committed=67108864, init=67108864, max=67108864, used=20896176}, currentMemory=MemoryCommonEntity{committed=67108864, init=67108864, max=67108864, used=20896176}, name='PS Old Gen', managerName='[PS MarkSweep]', objectName='java.lang:type=MemoryPool,name=PS Old Gen'}]}
+```
+
+ 2. 回调方法获取  
+    实现MemoryResultCallback接口，并在当前类加@OnyxiaCallback注解，monitorMenu属性填写MonitorMenuEnum.MEMORY,重写doCallback方法，参数GcInfoEntity是监控结果。例如：
+
+```
+@OnyxiaCallback(monitorMenu = MonitorMenuEnum.MEMORY)
+public class MemoryCallback implements MemoryResultCallback {
+    @Override
+    public void doCallback(MemoryInfoEntity monitorResult) {
+     //拿到监控结果后，根据自己的业务逻辑，实现相关逻辑
+        System.out.println(monitorResult);
+    }
+}
+```
+3. 监控结果属性  
+  
+MemoryInfoEntity对象  
+
+| 属性名        | 类型           | 含义  |
+| ------------- |:-------------:| -----:|
+| headMomory      | MemoryCommonEntity | 堆内存 |
+| noHeadMomory      | MemoryCommonEntity      |  	非堆内存 |
+| memoryPoolInfoEntityList | List<MemoryPoolInfoEntity>      |   各个区域内存数据 |
+
+   
+   
+MemoryCommonEntity对象  
+
+参考：[MemoryUsage](https://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryUsage.html)
+
+
+| 属性名        | 类型           | 含义  |
+| ------------- |:-------------:| -----:|
+| committed      | long | 已申请内存 |
+| init      | long      |  	初始化内存 |
+| max | long      |   最大内存，收集器有可能不会记录，若不记录，则为-1 |
+| used | long      |    已使用内存 |  
+
+MemoryPoolInfoEntity  
+参考：[MemoryPoolMXBean](https://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryPoolMXBean.html)
+
+| 属性名        | 类型           | 含义  |
+| ------------- |:-------------:| -----:|
+| peakMemroy      | MemoryCommonEntity | 峰值内存 |
+| currentMemory      | MemoryCommonEntity      |  	当前内存区域 |
+| managerName | String      |   所属管理者名称,例如：[PS MarkSweep, PS Scavenge] |
+| objectName | String      |    objectName，例如：java.lang:type=MemoryPool,name=PS Eden Space |
+| name | String      |   name，例如：PS Survivor Space |
