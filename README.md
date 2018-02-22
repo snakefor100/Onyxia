@@ -1,9 +1,9 @@
 # 简介
 提供对服务的各种监控，现阶段包括线程，内存，GC。监控方式有两种：
-- 1： 主动获取监控结果 - Thread,Memory
+- `1： 主动获取监控结果 - Thread,Memory`
     每隔固定时间（配置文件的delay值），获取当前服务中的Thread，Memory监控信息
     
-- 2： 被动获取监控结果 - GC
+- `2： 被动获取监控结果 - GC`
     每当GC动作结束时，获取当前GC的监控信息
 
 要求： jdk版本： 1.7以上，spring boot项目
@@ -12,7 +12,7 @@
 1：引入jar包 com.junlong:onyxia-starter:版本号
 2: 增加onyxia的配置，例如：
 
-```
+```yaml
 #增加监控配置
 onyxia:
   #监控开关，默认为false，若在正式环境，想添加监控功能，需设置为true
@@ -40,9 +40,12 @@ onyxia:
 # 查看监控结果
 
 ## [THREAD]
-sds
-
+### 获取监控结果
+ 1. 日志
+    配置
+ 2. 回调方法获取
+    fas
 ## [GC]
-dd
+### 获取监控结果
 ## [MEMORY]
-ee
+### 获取监控结果
