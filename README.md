@@ -33,9 +33,9 @@ onyxia:
 
 # 监控模块
 
-- [THREAD](#THREAD)  提供对线程的监控.
-- [GC](#GC)  提供对GC的监控.
-- [MEMORY](#MEMORY)  提供对内存的监控
+- [线程监控](#THREAD)  提供对线程的监控.
+- [GC监控](#GC)  提供对GC的监控.
+- [内存监控](#MEMORY)  提供对内存的监控
 
 
 ##   <span id="THREAD">THREAD</span>
