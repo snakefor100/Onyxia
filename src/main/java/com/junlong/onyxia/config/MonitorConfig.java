@@ -16,18 +16,18 @@ public class MonitorConfig {
     /**
      * 监控项
      */
-    private List<MonitorMenuConfig> monitorMenu;
+    private List<MonitorMenuConfig> monitorMenuList;
     /**
      * 总开关，若为false，则关闭所有监控
      */
     private boolean mainSwitch;
 
-    public List<MonitorMenuConfig> getMonitorMenu() {
-        return monitorMenu;
+    public List<MonitorMenuConfig> getMonitorMenuList() {
+        return monitorMenuList;
     }
 
-    public void setMonitorMenu(List<MonitorMenuConfig> monitorMenu) {
-        this.monitorMenu = monitorMenu;
+    public void setMonitorMenuList(List<MonitorMenuConfig> monitorMenuList) {
+        this.monitorMenuList = monitorMenuList;
     }
 
     public boolean isMainSwitch() {
